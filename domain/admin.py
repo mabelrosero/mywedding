@@ -1,5 +1,11 @@
+from typing import Any, Optional
 from django.contrib import admin
-from .models import Event, Product, Reservation, Service, SubService, SubServiceForEvent, Supplier
+from django.db.models.fields.related import ForeignKey
+from django.forms.models import ModelChoiceField
+from django.http.request import HttpRequest
+
+from domain.forms import ReservationForm
+from .models import Event, Product, Reservation, Service, SubService, Supplier
 
 
 #an event
@@ -28,13 +34,28 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "unit", "supplier",)
     
 
-@admin.register(SubServiceForEvent)
-class SubServiceForEventAdmin(admin.ModelAdmin):
-    list_display = ("name", "subservice", "event", )
-    #search_fields = ("name__startswith", )    
+# @admin.register(SubServiceForEvent)
+# class SubServiceForEventAdmin(admin.ModelAdmin):
+#     list_display = ("name", "subservice", "event", )
+#     #search_fields = ("name__startswith", )    
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ("name", "quantity", )
+    # form = ReservationForm
+
+    def formfield_for_foreignkey(self, db_field: ForeignKey, request: Optional[HttpRequest], **kwargs: Any) -> Optional[ModelChoiceField]:
+        print("***********")
+        
+
+        if db_field.name == "service":
+            print(db_field.__dict__)
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    class Media:
+        js = (
+            'js/chained-area.js',
+        )
+    list_display = ("quantity", )
     #search_fields = ("name__startswith", )   
  

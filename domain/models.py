@@ -1,7 +1,5 @@
 from django.db import models
 
-
-
     
 #class to create events for a wedding with name, budget, date and guest
 class Event(models.Model):
@@ -27,6 +25,7 @@ class SubService(models.Model):
     name = models.CharField(null=False, blank=False, max_length=500)
     description = models.TextField()
     service = models.ForeignKey('Service', on_delete=models.CASCADE)
+    products = models.ManyToManyField('Product')
     
     def __str__(self):
         return self.name
@@ -41,12 +40,12 @@ class Supplier(models.Model):
     
     def __str__(self):
         return self.name
+
 #products or services that providers have to plan the wedding 
 class Product(models.Model):
     name = models.CharField(null=False, blank=False, max_length=500)
     price = models.TextField()
     unit = models.TextField()
-    
     supplier = models.ForeignKey('Supplier', on_delete=models.CASCADE)
 
     def __str__(self):
@@ -56,25 +55,11 @@ class Product(models.Model):
         unique_together = ("name", "supplier", )
 
 
-class SubServiceForEvent(models.Model):
-    name = models.CharField(null=False, blank=False, max_length=500)
+class Reservation(models.Model):    
     event = models.ForeignKey('Event', on_delete=models.CASCADE)
+    service = models.ForeignKey('Service', on_delete=models.CASCADE)
     subservice = models.ForeignKey('SubService', on_delete=models.CASCADE)
-    #subservices = models.ManyToManyField("SubService", blank=True)
-    
-    def __str__(self):
-        return self.name
-
-
-    class Meta:
-        unique_together = ("name","event", "subservice")
-
-class Reservation(models.Model):
-    name = models.CharField(null=False, blank=False, max_length=500)
-    event = models.ForeignKey('Event', on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
-    subservice = models.ForeignKey('SubService', on_delete=models.CASCADE)
-   
     
     quantity = models.IntegerField(default=1, null=False, blank=False)
     reservation_date = models.DateField(default="2021-11-25", null=False, blank=False)
@@ -83,8 +68,8 @@ class Reservation(models.Model):
     
 
     def __str__(self):
-        return self.name
+        return self.event.name
 
 
     class Meta:
-        unique_together = ("name", "event", "product", "subservice")
+        unique_together = ("event", "service", "subservice", "product")
