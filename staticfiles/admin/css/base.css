@@ -6,10 +6,10 @@
 
 /* VARIABLE DEFINITIONS */
 :root {
-  --primary: red;
+  --primary: #c80400;
   --secondary: #417690;
-  --accent: #f5dd5d;
-  --primary-fg: #fff;
+  --accent: #c80400;
+  --primary-fg: #c80400;
 
   --body-fg: #333;
   --body-bg: #fff;
@@ -59,7 +59,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary: #264b5d;
+    --primary: #c80400;
     --primary-fg: #eee;
 
     --body-fg: #eeeeee;

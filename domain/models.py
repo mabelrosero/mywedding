@@ -12,7 +12,7 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
-# a service like religious ceremony o reception
+# create a service with name and description like religious ceremony o reception
 class Service(models.Model):
     name = models.CharField(null=False, blank=False, unique=False, max_length=500)
     description = models.TextField()
@@ -20,7 +20,7 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
-# subservice like venues for the reception 
+#create subservice like venues for the reception. Fields name, description ,service, productos
 class SubService(models.Model):
     name = models.CharField(null=False, blank=False, max_length=500)
     description = models.TextField()
@@ -33,7 +33,7 @@ class SubService(models.Model):
     class Meta:
         unique_together = ("name", "service", )
 
-#companies that provides the products
+#create companies that provides the products. Fields name and description
 class Supplier(models.Model):
     name = models.CharField(null=False, blank=False, unique=False, max_length=500)
     description = models.TextField()
@@ -41,7 +41,7 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
-#products or services that providers have to plan the wedding 
+#products or services that providers have to plan the wedding.Fields  
 class Product(models.Model):
     name = models.CharField(null=False, blank=False, max_length=500)
     price = models.TextField()
@@ -54,7 +54,7 @@ class Product(models.Model):
     class Meta:
         unique_together = ("name", "supplier", )
 
-
+#create reservation with event, service, subservice, product, quantity, dates
 class Reservation(models.Model):    
     event = models.ForeignKey('Event', on_delete=models.CASCADE)
     service = models.ForeignKey('Service', on_delete=models.CASCADE)
