@@ -11,7 +11,15 @@ from .models import Event, Product, Reservation, Service, SubService, Supplier
 #an event
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("name", "budget", "event_date", "guest", )
+    list_display = ("name", "budget", "event_date", "guest", "get_total")
+
+    def get_total(self, obj):
+        reservations = Reservation.objects.filter(event_id=obj.id)
+        reservations = list(reservations)
+        total = 0
+        for r in reservations:
+            total += float(r.product.price)
+        return total
 
 #a service DCT
 @admin.register(Service)
@@ -41,21 +49,14 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    # form = ReservationForm
-
-    def formfield_for_foreignkey(self, db_field: ForeignKey, request: Optional[HttpRequest], **kwargs: Any) -> Optional[ModelChoiceField]:
-        print("***********")
-        
-
-        if db_field.name == "service":
-            print(db_field.__dict__)
-
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    form = ReservationForm
 
     class Media:
         js = (
             'js/chained-area.js',
         )
-    list_display = ("quantity", )
+    list_display = ("event", "service", "subservice", "product", "quantity", "product", "get_price" )
     #search_fields = ("name__startswith", )   
  
+    def get_price(self, obj):
+        return obj.product.price

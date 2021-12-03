@@ -14,6 +14,9 @@ for suser in SubService.objects.all():
         print(suser.name, p.name)
 
 
+e = SubService.objects.all()
+
+
 sub1 = SubService.objects.filter(id=1)
 print(sub1.count())
 if sub1.exists():
